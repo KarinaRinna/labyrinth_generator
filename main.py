@@ -34,6 +34,28 @@ class Cell:
         if self.walls['left']:
             pygame.draw.line(sc, pygame.Color('darkorange'), (x, y + TILE), (x, y), 2)
 
+    def check_cell(self, x, y):
+        find_index = lambda x, y: x + y * cols
+        if x < 0 or x > cols - 1 or y < 0 or y > rows - 1:
+            return False
+        return grid_cells[find_index(x, y)]
+
+    def check_neighbors(self):
+        neighbors = []
+        top = self.check_cell(self.x, self.y -1)
+        right = self.check_cell(self.x + 1, self.y)
+        bottom = self.check_cell(self.x, self.y + 1)
+        left = self.check_cell(self.x - 1, self.y)
+        if top and not top.visited:
+            neighbors.append(top)
+        if right and not right.visited:
+            neighbors.append(right)
+        if bottom and not bottom.visited:
+            neighbors.append(bottom)
+        if left and not left.visited:
+            neighbors.append(left)
+        return choice(neighbors) if neighbors else False
+
 
 grid_cells = [Cell(col, row) for row in range(rows) for col in range(cols)]
 current_cell = grid_cells[0]
@@ -49,6 +71,11 @@ while True:
     [cell.draw() for cell in grid_cells]
     current_cell.visited = True
     current_cell.draw_current_cell()
+
+    next_cell = current_cell.check_neighbors()
+    if next_cell:
+        next_cell.visited = True
+        current_cell = next_cell
 
     pygame.display.flip()
     clock.tick(30)
