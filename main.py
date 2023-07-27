@@ -73,7 +73,6 @@ def remove_walls(current, next):
         current.walls['bottom'] = False
         next.walls['top'] = False
 
-
 grid_cells = [Cell(col, row) for row in range(rows) for col in range(cols)]
 current_cell = grid_cells[0]
 stack = []
