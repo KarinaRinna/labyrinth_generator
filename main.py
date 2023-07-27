@@ -2,7 +2,7 @@ import pygame
 from random import choice
 
 RES = WIDTH, HEIGHT = 1202, 902
-TILE = 100
+TILE = 50
 cols, rows = WIDTH // TILE, HEIGHT // TILE
 
 pygame.init()
@@ -76,6 +76,7 @@ def remove_walls(current, next):
 grid_cells = [Cell(col, row) for row in range(rows) for col in range(cols)]
 current_cell = grid_cells[0]
 stack = []
+colors, color = [], 40
 
 while True:
     sc.fill(pygame.Color('darkslategray'))
@@ -87,18 +88,22 @@ while True:
     [cell.draw() for cell in grid_cells]
     current_cell.visited = True
     current_cell.draw_current_cell()
+    [pygame.draw.rect(sc, colors[i], (cell.x * TILE +5, cell.y * TILE + 5, TILE - 10, TILE - 10),
+                                      border_radius=12) for i, cell in enumerate(stack)]
 
     next_cell = current_cell.check_neighbors()
     if next_cell:
         next_cell.visited = True
         stack.append(current_cell)
+        colors.append((min(color, 255), 10, 100))
+        color += 1
         remove_walls(current_cell, next_cell)
         current_cell = next_cell
     elif stack:
         current_cell = stack.pop()
 
     pygame.display.flip()
-    clock.tick(10)
+    clock.tick(30)
 
 
 
