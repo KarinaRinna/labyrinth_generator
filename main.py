@@ -92,8 +92,11 @@ while True:
     next_cell = current_cell.check_neighbors()
     if next_cell:
         next_cell.visited = True
+        stack.append(current_cell)
         remove_walls(current_cell, next_cell)
         current_cell = next_cell
+    elif stack:
+        current_cell = stack.pop()
 
     pygame.display.flip()
     clock.tick(10)
